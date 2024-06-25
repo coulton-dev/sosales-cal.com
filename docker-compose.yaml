@@ -8,7 +8,6 @@ networks:
 
 services:
   calcom:
-    image: calcom.docker.scarf.sh/calcom/cal.com
     build:
       context: .
       dockerfile: Dockerfile
