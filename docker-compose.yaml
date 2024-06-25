@@ -11,7 +11,6 @@ services:
     restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
-    env_file: .env
     environment:
       - 'PGPORT=${POSTGRES_PORT:-5432}'
       - 'POSTGRES_PORT=${POSTGRES_PORT:-5432}'
@@ -39,7 +38,6 @@ services:
  
     ports:
       - 3000:3000
-    env_file: .env
     environment:
       - 'PGPORT=${POSTGRES_PORT:-5432}'
       - 'POSTGRES_USER=${SERVICE_USER_POSTGRES}'
