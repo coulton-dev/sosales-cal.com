@@ -1,8 +1,27 @@
 # Use postgres/example user/password credentials
 version: '3.8'
 
+volumes:
+  database-data:
 
 services:
+  database:
+    container_name: database
+    image: postgres
+    restart: always
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    env_file: .env
+    environment:
+      - 'PGPORT=${POSTGRES_PORT:-5432}'
+      - 'POSTGRES_PORT=${POSTGRES_PORT:-5432}'
+      - 'POSTGRES_USER=${SERVICE_USER_POSTGRES}'
+      - 'PGPASSWORD=${SERVICE_PASSWORD_POSTGRES}'
+      - 'POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}'
+      - 'PGDATABASE=${POSTGRES_DB:-postgres}'
+      - 'POSTGRES_DB=${POSTGRES_DB:-postgres}'
+   
+
   calcom:
     build:
       context: .
@@ -17,11 +36,19 @@ services:
         DATABASE_URL: ${DATABASE_URL}
         DATABASE_DIRECT_URL: ${DATABASE_URL}
     restart: always
-
+ 
     ports:
       - 3000:3000
+    env_file: .env
     environment:
-      - DATABASE_URL=${DATABASE_URL}
+      - 'PGPORT=${POSTGRES_PORT:-5432}'
+      - 'POSTGRES_USER=${SERVICE_USER_POSTGRES}'
+      - 'POSTGRES_PORT=${POSTGRES_PORT:-5432}'
+      - 'PGPASSWORD=${SERVICE_PASSWORD_POSTGRES}'
+      - 'POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}'
+      - 'PGDATABASE=${POSTGRES_DB:-postgres}'
+      - 'POSTGRES_DB=${POSTGRES_DB:-postgres}'
+      - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
       - DATABASE_DIRECT_URL=${DATABASE_URL}
-  
-
+    depends_on:
+      - database
