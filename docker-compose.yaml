@@ -47,6 +47,6 @@ services:
       - 'PGDATABASE=${POSTGRES_DB:-postgres}'
       - 'POSTGRES_DB=${POSTGRES_DB:-postgres}'
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
-      - DATABASE_DIRECT_URL=${DATABASE_URL}
+      - DATABASE_DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
     depends_on:
       - database
