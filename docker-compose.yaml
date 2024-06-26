@@ -12,13 +12,16 @@ services:
     volumes:
       - database-data:/var/lib/postgresql/data/
     environment:
-      - 'PGPORT=${POSTGRES_PORT:-5432}'
-      - 'POSTGRES_PORT=${POSTGRES_PORT:-5432}'
-      - 'POSTGRES_USER=${SERVICE_USER_POSTGRES}'
-      - 'PGPASSWORD=${SERVICE_PASSWORD_POSTGRES}'
-      - 'POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}'
-      - 'PGDATABASE=${POSTGRES_DB:-postgres}'
+      - POSTGRES_USER=$SERVICE_USER_POSTGRES
+      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES
       - 'POSTGRES_DB=${POSTGRES_DB:-postgres}'
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'
+      interval: 5s
+      timeout: 20s
+      retries: 10
    
 
   calcom:
@@ -39,14 +42,12 @@ services:
     ports:
       - 3000:3000
     environment:
-      - 'PGPORT=${POSTGRES_PORT:-5432}'
-      - 'POSTGRES_USER=${SERVICE_USER_POSTGRES}'
+      - POSTGRES_USER=$SERVICE_USER_POSTGRES
       - 'POSTGRES_PORT=${POSTGRES_PORT:-5432}'
-      - 'PGPASSWORD=${SERVICE_PASSWORD_POSTGRES}'
-      - 'POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES}'
-      - 'PGDATABASE=${POSTGRES_DB:-postgres}'
+      - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
       - 'POSTGRES_DB=${POSTGRES_DB:-postgres}'
       - DATABASE_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
       - DATABASE_DIRECT_URL=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database:5432/${POSTGRES_DB}
     depends_on:
-      - database
+      database:
+        condition: service_healthy
