@@ -13,7 +13,7 @@ services:
       - database-data:/var/lib/postgresql/data/
     environment:
       - POSTGRES_USER=$SERVICE_USER_POSTGRES
-      - POSTGRES_PASSWORD=${SERVICE_PASSWORD_POSTGRES
+      - POSTGRES_PASSWORD=$SERVICE_PASSWORD_POSTGRES
       - 'POSTGRES_DB=${POSTGRES_DB:-postgres}'
     healthcheck:
       test:
