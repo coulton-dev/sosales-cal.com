@@ -37,9 +37,9 @@ jobs:
           context: .
           push: true
           tags: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/caldotcom-sosales:latest
+          secrets: |
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            DATABASE_DIRECT_URL=${{ secrets.DATABASE_DIRECT_URL }}
 
 
-secrets:
-  DATABASE_URL: ${{ secrets.DATABASE_URL }}
-  DATABASE_DIRECT_URL: ${{ secrets.DATABASE_DIRECT_URL }}
 
